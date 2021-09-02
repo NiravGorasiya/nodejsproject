@@ -73,22 +73,26 @@ router.patch("/image/:id",upload.single("image"),async(req,res)=>{
   }else{
       console.log("file is received");
       try {
-          const imagedata= await image.findById(req.params.id);
-          const findimage=imagedata.image;
-          if(!req.file){
-            fs.unlinkSync("public/images/"+findimage)
-          }
+          var imagedata= await image.findById(req.params.id);
           if(req.file){
-                const data={
+              var findimage=imagedata.image;
+              fs.unlinkSync("public/images/"+findimage)
+                var data={
                     name:req.body.name,
                     desc:req.body.desc,
                     image:req.file.filename
                 }
-                const abc =await image.findByIdAndUpdate(req.params.id,data,{
+            }else{
+                var data={
+                    name:req.body.name,
+                    desc:req.body.desc,
+                }
+            }
+            const abc =await image.findByIdAndUpdate(req.params.id,data,{
                     new:true
-                });
-                res.status(200).send(abc);
-            }      
+            });
+            res.status(200).send(abc);
+           
       } catch (error) {
           if(error){
               console.log(error);
